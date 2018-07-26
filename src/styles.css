@@ -1,0 +1,166 @@
+/* Master Styles */
+@import "~@angular/material/prebuilt-themes/indigo-pink.css";
+@import '~@angular/material/prebuilt-themes/deeppurple-amber.css';
+
+.example-form {
+  min-width: 150px;
+  max-width: 500px;
+  width: 100%;
+}
+
+.example-full-width {
+  width: 100% !important;
+}
+
+.example-half-width {
+  width: 40%;
+}
+
+.content-align{
+  text-align: center
+}
+
+.mat-list-icon {
+  color: rgba(0, 0, 0, 0.54);
+}
+.hide{
+  display:none
+}
+.show{
+  display:block
+}
+
+.example-h2 {
+  margin: 10px;
+}
+
+.example-section {
+  display: flex;
+  align-content: center;
+  align-items: center;
+  /* height: 60px; */
+}
+
+.example-margin {
+  margin: 0 10px;
+}
+
+.ng-valid[required], .ng-valid.required  {
+  border-left: 5px solid #42A948; /* green */
+}
+
+.ng-invalid:not(form)  {
+  border-left: 0px solid #a94442;/*  red */
+}
+
+.mat-fab.mat-primary, .mat-mini-fab.mat-primary, .mat-raised-button.mat-primary {
+  background-color: #6871d6;
+}
+
+.verticalAlignCustom{
+  vertical-align: -0.1em
+}
+.ng-valid[required], .ng-valid.required {
+   border-left: 0px solid #42A948;/* */
+}
+.chip-margin-top{
+  margin-top: 0.2em !important;
+}
+.mat-chip:not(.mat-basic-chip) {
+  display: inline-flex;
+  align-items: center;
+  cursor: default;
+  transition: box-shadow 280ms cubic-bezier(0.4, 0, 0.2, 1);
+  padding: 7px 12px;
+  border-radius: 24px;
+  margin: 0 0 0 8px;
+}
+.vertical-align-bottom{
+  vertical-align: bottom;
+}
+.boder-spacing-zero{
+  border-spacing: 0px !important;
+}
+.paddingLeftOneHalf{
+  padding-left: 1.5em;
+}
+.paddingLeftHalf{
+  padding-left: 0.5em;
+}
+.mat-option.mat-option-disabled.blackColor{
+  color:black !important;
+}
+.halfWidth{
+ width: 50%;
+}
+
+.verticleAlignSub{
+  vertical-align: sub !important;
+}
+
+
+
+h1 {
+  color: #369;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 250%;
+}
+h2, h3 {
+  color: #444;
+  font-family: Arial, Helvetica, sans-serif;
+  font-weight: lighter;
+}
+body {
+  margin: 2em;
+}
+body, input[text], button {
+  color: #888;
+  font-family: Cambria, Georgia;
+}
+a {
+  cursor: pointer;
+  cursor: hand;
+}
+button {
+  font-family: Arial;
+  background-color: #eee;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  cursor: hand;
+}
+button:hover {
+  background-color: #cfd8dc;
+}
+button:disabled {
+  background-color: #eee;
+  color: #aaa;
+  cursor: auto;
+}
+
+/* Navigation link styles */
+nav a {
+  padding: 5px 10px;
+  text-decoration: none;
+  margin-right: 10px;
+  margin-top: 10px;
+  display: inline-block;
+  background-color: #eee;
+  border-radius: 4px;
+}
+nav a:visited, a:link {
+  color: #607D8B;
+}
+nav a:hover {
+  color: #039be5;
+  background-color: #CFD8DC;
+}
+nav a.active {
+  color: #039be5;
+}
+
+/* everywhere else */
+* {
+  font-family: Arial, Helvetica, sans-serif;
+}

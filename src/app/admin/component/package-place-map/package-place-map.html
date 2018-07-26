@@ -1,0 +1,80 @@
+<mat-card  class="example-card">    
+        <mat-card-header>
+            <mat-card-subtitle>                   
+                    <mat-icon mat-list-icon class="verticalAlignCustom">location_city</mat-icon>
+                    <b style="font-size:1.3em">Package Specifc Place</b>
+            </mat-card-subtitle>       
+          </mat-card-header>
+          <mat-card-content>
+              <form #placePkgForm="ngForm">
+              <table class="example-full-width">
+                  <tr>                      
+                      <td>
+                            <mat-form-field class="example-full-width">
+                                    <mat-select placeholder="Package" (change)="getPackageSpecificPlaces()" id="package" name="package" 
+                                     [(ngModel)]="packageID" #package="ngModel" required>
+                                      <mat-option>Select Package</mat-option>
+                                        <mat-optgroup *ngFor="let package of packages" [label]="package[0].PackageSubCategory"
+                                            [disabled]="false">
+                                            <mat-option *ngFor="let packageDd of package[0].Packages" [value]="packageDd.Id">
+                                                {{packageDd.Name}}
+                                            </mat-option>
+                                        </mat-optgroup>
+                                    </mat-select>
+                            </mat-form-field>
+                      </td>
+                  </tr>
+                  <tr>                      
+                     <td class="vertical-align-bottom" style="width:45%">
+                        <mat-form-field class="demo-chip-list example-full-width">
+                            <mat-chip-list #allPlace>
+                              <mat-chip class="chip-margin-top" *ngFor="let place of allPlaces"
+                                       [removable]="true" (remove)="moveRight(place)">
+                                {{place.Name}}
+                                <mat-icon matChipRemove>check_circle</mat-icon>
+                              </mat-chip>
+                              <input placeholder="All Places"
+                              [matChipInputFor]="allPlace"
+                              (keypress)="keyPressNotAllowed($event)"
+                              [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                              [matChipInputAddOnBlur]="addOnBlur"
+                              (matChipInputTokenEnd)="add($event)" />
+                            </mat-chip-list>
+                        </mat-form-field>
+                     </td>
+                     <td class="content-align">
+                            <mat-icon>compare_arrows</mat-icon>
+                     </td>
+                     <td style="width:45%" class="vertical-align-bottom">
+                            <mat-form-field class="demo-chip-list example-full-width">
+                                <mat-chip-list #packagePlaces>
+                                  <mat-chip class="chip-margin-top" *ngFor="let packageSpecificPlace of packageSpecificPlaces"
+                                           [removable]="true" (remove)="moveLeft(packageSpecificPlace)">
+                                    {{packageSpecificPlace.Name}}
+                                    <section  (click)="toggleActive(packageSpecificPlace)" class="example-section">
+                                        <mat-slide-toggle [title]="packageSpecificPlace.IsActive?'Active':'In Active'"
+                                            class="example-margin"
+                                            [checked]="packageSpecificPlace.IsActive">
+                                        </mat-slide-toggle>
+                                      </section>
+                                    <mat-icon matChipRemove>cancel</mat-icon>
+                                  </mat-chip>
+                                  <input placeholder="Package Specific Place(s)"
+                                  [matChipInputFor]="packagePlaces"
+                                  (keypress)="keyPressNotAllowed($event)"
+                                  [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                                  [matChipInputAddOnBlur]="addOnBlur"
+                                  (matChipInputTokenEnd)="add($event)" />
+                                </mat-chip-list>
+                            </mat-form-field>
+                         </td>
+                  </tr>
+                  <tr>
+                    <td colspan="5" class="paddingLeftOneHalf">
+                        <button mat-raised-button color="primary" [disabled]="btnDisable[0]" (click)="submitPackagePlaceMap(placePkgForm.form.valid)">Submit</button>
+                    </td>
+                  </tr>
+              </table>
+              </form>
+          </mat-card-content>
+    </mat-card>

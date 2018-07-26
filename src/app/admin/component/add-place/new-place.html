@@ -1,0 +1,57 @@
+<mat-card  class="example-card">    
+    <mat-card-header>
+        <mat-card-subtitle>
+                <button mat-icon-button [matMenuTriggerFor]="menu">
+                    <mat-icon>menu</mat-icon>
+                      </button>
+                      <mat-menu #menu="matMenu">
+                        <button mat-menu-item (click)="addNewPlace()">
+                          <mat-icon>add</mat-icon>
+                          <span>  Add  </span>
+                        </button>
+                        <button mat-menu-item [disabled]="disableRemoverBtn" (click)="removePlace()">
+                          <mat-icon>remove</mat-icon>
+                          <span>  Remove  </span>
+                        </button>
+                      </mat-menu>
+                <mat-icon mat-list-icon class="verticalAlignCustom">location_city</mat-icon>
+                <b style="font-size:1.3em">Add New Place</b>
+        </mat-card-subtitle>       
+      </mat-card-header>
+      <mat-card-content>
+          <form #placeForm="ngForm">
+          <table>
+              <tr *ngFor="let newPlace of newPlacesList;let i=index">
+                  <td>                                      
+                    <section class="example-section paddingLeftHalf">
+                       <mat-checkbox class="example-margin" (change)="checkboxChanged()" name="checkbox" [(ngModel)]="newPlace.isChecked"></mat-checkbox>                            
+                    </section>
+                  </td>
+                  <td>
+                    <mat-form-field>
+                      <input matInput type="text" class="form-control" placeholder="Place Name"
+                            id="name" name="name{{i}}" [(ngModel)]="newPlace.Name" required  minlength="3"
+                               #name="ngModel">                 
+                      </mat-form-field>
+                  </td>
+                  <td  class="paddingLeftOneHalf"></td>
+                  <td>
+                     <section class="example-section">
+                      <label class="example-margin">IsActive : </label>
+                      <mat-radio-group name="isActive{{i}}" [(ngModel)]="newPlace.isActive">
+                        <mat-radio-button class="example-margin"  value="1">Active</mat-radio-button>
+                        <mat-radio-button class="example-margin" value="0">InActive</mat-radio-button>
+                      </mat-radio-group>
+                     </section>
+                  </td>
+              </tr>
+              <tr>
+                <td colspan="5" class="paddingLeftOneHalf">
+                    <button mat-raised-button color="primary" [disabled]="btnDisable[0]" (click)="submitPlaces(placeForm.form.valid)">Submit</button>
+                </td>
+              </tr>
+          </table>
+          </form>
+      </mat-card-content>
+</mat-card>
+<img [src]="heroImageUrl" alt="yes"/>

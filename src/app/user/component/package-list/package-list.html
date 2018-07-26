@@ -1,0 +1,39 @@
+<p>Packages List</p>
+<mat-accordion>
+    <mat-expansion-panel (opened)="panelOpenState = true" (closed)="panelOpenState = false" *ngFor="let package of packages;let i=index">
+        <mat-expansion-panel-header>
+            <mat-panel-title>
+                {{package[0][0].PackageCategoryName}}
+            </mat-panel-title>
+            <mat-panel-description>
+                {{package[0][0].PackageCategoryName}}
+            </mat-panel-description>
+        </mat-expansion-panel-header>
+        <mat-list *ngFor="let packageLst of package;let pkLstIndex=index">
+            <h3 mat-subheader>{{packageLst[0].PackageSubCategoryName}}</h3>
+            <mat-divider></mat-divider>
+            <table class="example-full-width">
+                <tr *ngIf="pkLstIndex==0" class="example-full-width">
+                    <th style="padding-left:2.1em;text-align:left">Code</th>
+                    <th style="text-align:left">Fair(Rupees)</th>
+                    <th style="padding-left:0.7em;text-align:left">Location(s)</th>
+                </tr>
+                <tr *ngFor="let pkg of packageLst">
+                    <td style="width:15%">
+                        <mat-icon mat-list-icon>location_city</mat-icon>
+                        {{pkg.code}}
+                    </td>
+                    <td style="width:15%">{{pkg.Fare | currency:'INR':false}}</td>
+                    <td style="width:70%">
+                        <mat-chip-list #allPlace>
+                            <mat-chip class="chip-margin-top" *ngFor="let place of pkg.PackagePlaces" [removable]="true" (remove)="moveRight(place)">
+                                {{place.Name}}
+                            </mat-chip>
+                        </mat-chip-list>
+
+                    </td>
+                </tr>
+            </table>
+        </mat-list>
+    </mat-expansion-panel>
+</mat-accordion>

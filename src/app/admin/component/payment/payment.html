@@ -1,0 +1,189 @@
+<br/>
+<mat-card class="example-card">
+    <mat-card-header>
+        <mat-card-subtitle>
+            <mat-icon mat-list-icon class="verticalAlignCustom">location_city</mat-icon>
+            <b style="font-size:1.3em">Payment Form</b>
+        </mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content>
+        <form #bookingForm="ngForm">
+            <table class="example-full-width">
+                <tr>
+                    <td class="halfWidth">
+                        <mat-form-field    class="example-full-width">
+                            <input matInput placeholder="Booking ID"  class="example-full-width"
+                            aria-label="State" id="filterTxt" #filterTxt name="filterTxt"
+                            [matAutocomplete]="auto"
+                                (keyup)="filterPlacePackage(filterTxt.value)">
+                            <mat-autocomplete #auto="matAutocomplete" >
+                                <mat-option
+                                    *ngFor="let filteredResource of filteredResources | async;let i=index"
+                                    [value]="filteredResource.name">
+                                    <section class="example-section">
+                                        <span>{{ filteredResource.Name }}</span>
+                                    </section>
+                                </mat-option>
+                            </mat-autocomplete>
+                        </mat-form-field>
+                    </td>
+                    <td class="paddingLeftOneHalf">
+                        
+                    </td>
+                    <td class="halfWidth" style="text-align:right">
+                        <table  class="example-full-width">
+                            <tr>
+                                <td>                                
+                                    <mat-form-field class="example-full-width">
+                                        <input matInput [matDatepicker]="paymentDate" name="paymentDate" [(ngModel)]="PaymentDateValue" placeholder="Payment Date">
+                                        <mat-datepicker-toggle matSuffix [for]="paymentDate"></mat-datepicker-toggle>
+                                        <mat-datepicker touchUi="true" #paymentDate></mat-datepicker>
+                                    </mat-form-field>                                
+                                </td>
+                                <td>
+                                    <label>
+                                        <b>Booking Date :
+                                        </b>{{bookingDate|date:'MMM d, y'}}
+                                    </label>
+                                </td>
+                            </tr>
+                        </table>
+                       
+                    </td>
+                </tr>
+                <tr>
+                        <td>
+                            <table class="example-full-width">
+                                <tr>
+                                    <td class="halfWidth">
+                                       Tour Start Date {{bookingDate| date:"MMM dd, yyyy"}}
+                                    </td>
+                                    <td class="halfWidth">
+                                        Tour End Date {{bookingDate| date:"MMM dd, yyyy"}}
+                                    </td>
+                                </tr>
+                            </table>
+                        </td> 
+                         <td class="paddingLeftOneHalf"></td>
+                        <td class="paddingLeftOneHalf vertical-align-bottom">
+                            <mat-form-field class="demo-chip-list example-full-width">
+                                <mat-chip-list #packagePlaces>
+                                    <mat-chip class="chip-margin-top" 
+                                    *ngFor="let packageSpecificPlace of packageSpecificPlaces"
+                                     [removable]="true" (remove)="removePlace(packageSpecificPlace)">
+                                        {{packageSpecificPlace.Name}}
+                                        <mat-icon matChipRemove>cancel</mat-icon>
+                                    </mat-chip>
+                                    <input placeholder="Tour Places" [matChipInputFor]="packagePlaces" 
+                                    (keypress)="keyPressNotAllowed($event)"
+                                     [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                                        [matChipInputAddOnBlur]="addOnBlur" 
+                                        (matChipInputTokenEnd)="add($event)" />
+                                </mat-chip-list>
+                            </mat-form-field>
+                        </td>
+                    </tr>
+                <tr>
+                    <td>                        
+                        <mat-form-field class="example-full-width">
+                            <input matInput type="text" class="form-control" 
+                            placeholder="Agreed Amount" id="agreedAmount" name="agreedAmount" 
+                            [(ngModel)]="AgreedAmount">
+                        </mat-form-field>
+                    </td>
+                    <td class="paddingLeftOneHalf"></td>
+                    <td>
+                        <mat-form-field class="example-full-width">
+                            <input matInput type="text" class="form-control" placeholder="Toatl Amount (Incl. of Service Tax)" id="totalAmount" name="totalAmount"
+                                [(ngModel)]="AgreedAmount">
+                        </mat-form-field>                    
+                    </td>
+                </tr>
+                <tr>
+                    <td>                    
+                        <mat-form-field class="example-full-width">
+                            <input matInput type="text" class="form-control" placeholder="Advance Amount Paid" id="advanceAmount" name="advanceAmount"
+                                [(ngModel)]="AgreedAmount">
+                        </mat-form-field>
+                    </td>
+                    <td class="paddingLeftOneHalf"></td>
+                    <td>
+                        <table class="example-full-width">
+                            <tr>
+                                <td>
+                                    <mat-form-field class="example-full-width">
+                                        <input matInput type="text" class="form-control" placeholder="Balance Amount" id="balanceAmount" name="balanceAmount" [(ngModel)]="AgreedAmount">
+                                    </mat-form-field>
+                                </td>
+                                <td>
+                                    <mat-form-field class="example-full-width">
+                                        <input matInput [matDatepicker]="duePaymentDate" name="duePaymentDate"
+                                         [(ngModel)]="PaymentDateValue" placeholder="Due Payable On Before">
+                                        <mat-datepicker-toggle matSuffix [for]="duePaymentDate">
+
+                                        </mat-datepicker-toggle>
+                                        <mat-datepicker touchUi="true" #duePaymentDate></mat-datepicker>
+                                    </mat-form-field>
+                                </td>
+                            </tr>
+                        </table>       
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                            <h3 mat-subheader>Payment History</h3>
+                    </td>
+                    <td>
+                        <button mat-button (click)="openDialog()">
+                            <b style="color:blue">Make Payment?</b></button>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="5">
+                            <div class="example-container mat-elevation-z8">
+                                    <mat-table #table [dataSource]="dataSource" matSort>
+                                  
+                                      <ng-container matColumnDef="SNo">
+                                            <mat-header-cell *matHeaderCellDef mat-sort-header> S.No </mat-header-cell>
+                                            <mat-cell *matCellDef="let element"> {{element.SNo}} </mat-cell>
+                                      </ng-container>
+                                      <!-- Position Column -->
+                                      <ng-container matColumnDef="Paid">
+                                        <mat-header-cell *matHeaderCellDef mat-sort-header> Paid </mat-header-cell>
+                                        <mat-cell *matCellDef="let element"> {{element.Paid}} </mat-cell>
+                                      </ng-container>
+                                  
+                                      <!-- Name Column -->
+                                      <ng-container matColumnDef="Receiver">
+                                        <mat-header-cell *matHeaderCellDef mat-sort-header> Receiver </mat-header-cell>
+                                        <mat-cell *matCellDef="let element"> {{element.Receiver}} </mat-cell>
+                                      </ng-container>
+                                  
+                                      <!-- Weight Column -->
+                                      <ng-container matColumnDef="PaidDate">
+                                        <mat-header-cell *matHeaderCellDef mat-sort-header> Paid Date </mat-header-cell>
+                                        <mat-cell *matCellDef="let element"> {{element.PaidDate|date:'MMM dd, yyyy'}} </mat-cell>
+                                      </ng-container>
+                                  
+                                      <!-- Symbol Column -->
+                                      <ng-container matColumnDef="RemainingAmount">
+                                        <mat-header-cell *matHeaderCellDef mat-sort-header> Balance Amount </mat-header-cell>
+                                        <mat-cell *matCellDef="let element"> {{element.RemainingAmount}} </mat-cell>
+                                      </ng-container>
+
+                                      <!-- Symbol Column -->
+                                      <ng-container matColumnDef="NextPayment">
+                                        <mat-header-cell *matHeaderCellDef mat-sort-header> Next Payment </mat-header-cell>
+                                        <mat-cell *matCellDef="let element"> {{element.NextPayment|date:'MMM dd, yyyy'}} </mat-cell>
+                                      </ng-container>
+                                  
+                                      <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                                      <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+                                    </mat-table>
+                                  </div>           
+                    </td>
+                </tr>
+            </table>
+        </form>
+    </mat-card-content>
+</mat-card>

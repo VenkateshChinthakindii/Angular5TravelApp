@@ -1,0 +1,665 @@
+<br/>
+<mat-card class="example-card">
+    <mat-card-header>
+        <mat-card-subtitle>
+            <mat-icon mat-list-icon class="verticalAlignCustom">location_city</mat-icon>
+            <b style="font-size:1.3em">
+                <span *ngIf="IsQuotation;else bookingElse">Quotation</span>
+                <ng-template #bookingElse>Booking</ng-template> Form</b>
+        </mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content>
+        <mat-horizontal-stepper [linear]="1==0" #stepper="matHorizontalStepper">
+            <mat-step [stepControl]="basicDetails">
+                <form #basicDetails="ngForm">
+                    <ng-template matStepLabel>Basic Info</ng-template>
+                    <table class="example-full-width">
+                        <tr>
+                            <td class="halfWidth">
+                                <table class="example-full-width">
+                                    <tr>
+                                        <td class="vertical-align-bottom">
+                                            <mat-form-field class="example-full-width">
+                                                <input matInput placeholder="Quotation ID" [disabled]="IsQuotation" class="example-full-width" aria-label="Quotation ID"
+                                                    id="aDdQuotation" #aDdQuotation name="aDdQuotation1" [(ngModel)]="bookingModelObj.Quotation.Name"
+                                                    [matAutocomplete]="aDdQuotationList" required (keyup)="filterQuotaion(aDdQuotation.value)">
+                                                <mat-autocomplete #aDdQuotationList="matAutocomplete" name="namequoataionList">
+                                                    <mat-option *ngFor="let quotationsListItem of filteredQuotationsList|async;
+                                                let i=index" (click)="selectedQuotation(quotationsListItem.ID)" [value]="quotationsListItem.Name">
+                                                        <section class="example-section">
+                                                            <span>{{ quotationsListItem.Name }}</span>
+                                                        </section>
+                                                    </mat-option>
+                                                </mat-autocomplete>
+                                            </mat-form-field>
+                                        </td>
+                                        <td *ngIf="!IsQuotation">
+                                            <mat-form-field class="example-full-width">
+                                                <input matInput placeholder="Booking ID" class="example-full-width" aria-label="Booking ID" required [(ngModel)]="bookingModelObj.Name"
+                                                    [disabled]="!IsQuotation" id="BookingId" #BookingId name="BookingId" [matAutocomplete]="BookingIdList"
+                                                    (keyup)="filterBooking(BookingId.value)">
+                                                <mat-autocomplete #BookingIdList="matAutocomplete">
+                                                    <mat-option *ngFor="let filteredBookingsListItem of filteredBookingsList|async;let i=index" (click)="selectedBooking(filteredBookingsListItem.ID)"
+                                                        [value]="filteredBookingsListItem.Name">
+                                                        <section class="example-section">
+                                                            <span>{{ filteredBookingsListItem.Name }}</span>
+                                                        </section>
+                                                    </mat-option>
+                                                </mat-autocomplete>
+                                            </mat-form-field>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                            <td class="paddingLeftOneHalf"></td>
+                            <td class="halfWidth">
+                                <table class="example-full-width">
+                                    <tr>
+                                        <td class="halfWidth">
+                                            <mat-form-field class="example-full-width">
+                                                <mat-select placeholder="Booking Type" id="bookingstype" name="bookingstype{{i}}" [(ngModel)]="bookingModelObj.Quotation.BookingTypeID"
+                                                    #bookingstype="ngModel" required>
+                                                    <mat-option>Select
+                                                        <span *ngIf="IsQuotation">Quotation</span>
+                                                        <span *ngIf="!IsQuotation">Booking</span>
+                                                        Type</mat-option>
+                                                    <mat-option *ngFor="let bookingType of bookingTypes" [value]="bookingType.Id">
+                                                        {{bookingType.Name}}
+                                                    </mat-option>
+                                                </mat-select>
+                                            </mat-form-field>
+                                        </td>
+                                        <td class="vertical-align-bottom">
+                                                <mat-form-field class="example-full-width" *ngIf="!IsQuotation">                                                        
+                                                        <input matInput [matDatepicker]="BookingDate" 
+                                                        name="BookingDate" [(ngModel)]="bookingModelObj.CreatedDate" 
+                                                        placeholder='Booking Date'>
+                                                        <mat-datepicker-toggle matSuffix [for]="BookingDate"></mat-datepicker-toggle>
+                                                        <mat-datepicker touchUi="true" #BookingDate></mat-datepicker>
+                                                    </mat-form-field>
+                                                   
+                                                    <mat-form-field class="example-full-width" *ngIf="IsQuotation">
+                                                            <input matInput [matDatepicker]="QuotationDate" 
+                                                    name="QuotationDate" [(ngModel)]="bookingModelObj.Quotation.CreatedDate" 
+                                                    placeholder='Quotation Date'>
+                                                    <mat-datepicker-toggle matSuffix [for]="QuotationDate"></mat-datepicker-toggle>
+                                                        <mat-datepicker touchUi="true" #QuotationDate></mat-datepicker>
+                                                </mat-form-field>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                    </table>
+                    <div>
+                        <button mat-button matStepperNext>Next</button>
+                    </div>
+                </form>
+            </mat-step>
+            <mat-step [stepControl]="PersonalDetails">
+                <form #PersonalDetails="ngForm">
+                    <ng-template matStepLabel>Address</ng-template>
+                    <table class="example-full-width">
+                        <tr>
+                            <td class="halfWidth">
+                                <table>
+                                    <tr>
+                                        <td>
+                                            <mat-form-field class="example-full-width">
+                                                <mat-select placeholder="Title" id="title" name="title" [(ngModel)]="bookingModelObj.Quotation.Customer.Title" #titleName="ngModel"
+                                                    required>
+                                                    <mat-option>Select Title</mat-option>
+                                                    <mat-option *ngFor="let title of titleList" [value]="title.ID">
+                                                        {{title.Name}}
+                                                    </mat-option>
+                                                </mat-select>
+                                            </mat-form-field>
+                                        </td>
+                                        <td class="example-full-width">
+                                            <mat-form-field class="example-full-width">
+                                                <input matInput type="text" class="form-control" placeholder="First Name" id="fname" name="fname" [(ngModel)]="bookingModelObj.Quotation.Customer.FirstName"
+                                                    required minlength="3" #fname="ngModel">
+                                            </mat-form-field>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                            <td class="paddingLeftOneHalf"></td>
+                            <td class="halfWidth">
+                                <mat-form-field class="example-full-width">
+                                    <input matInput type="text" class="form-control" placeholder="Last Name" id="lname" name="lname" [(ngModel)]="bookingModelObj.Quotation.Customer.LasttName"
+                                        required minlength="3" #lname="ngModel">
+                                </mat-form-field>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <mat-form-field class="example-full-width">
+                                    <input matInput type="text" class="form-control" placeholder="Contact Number" id="contact" name="contact" [(ngModel)]="bookingModelObj.Quotation.Customer.Contact"
+                                        required minlength="10" maxlength="10" #contact="ngModel">
+                                </mat-form-field>
+                            </td>
+                            <td class="paddingLeftOneHalf"></td>
+                            <td>
+                                <mat-form-field class="example-full-width">
+                                    <input matInput type="email" class="form-control" placeholder="Email" id="email" name="email" [(ngModel)]="bookingModelObj.Quotation.Customer.Email"
+                                        #email="ngModel">
+                                </mat-form-field>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <mat-form-field class="example-full-width">
+                                    <textarea matInput placeholder="Address" name="address" [(ngModel)]="bookingModelObj.Quotation.Customer.StreetAddress"></textarea>
+                                </mat-form-field>
+                            </td>
+                            <td class="paddingLeftOneHalf"></td>
+                            <td>
+                                <mat-form-field class="example-full-width">
+                                    <textarea matInput placeholder="Address Line 2" name="Address2" [(ngModel)]="bookingModelObj.Quotation.Customer.StreetAddressLine2"></textarea>
+                                </mat-form-field>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <mat-form-field class="example-full-width">
+                                    <mat-select placeholder="Country" id="country" name="country" [(ngModel)]="bookingModelObj.Quotation.Customer.Country" #country="ngModel"
+                                        required>
+                                        <mat-option>Select Title</mat-option>
+                                        <mat-option *ngFor="let Country of countriesList" [value]="Country.ID">
+                                            {{Country.Name}}
+                                        </mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </td>
+                            <td class="paddingLeftOneHalf"></td>
+                            <td>
+                                <mat-form-field class="example-full-width">
+                                    <mat-select placeholder="State" id="state" name="state" [(ngModel)]="bookingModelObj.Quotation.Customer.State" #state="ngModel"
+                                        required>
+                                        <mat-option>Select Title</mat-option>
+                                        <mat-option *ngFor="let state of statesList" [value]="state.ID">
+                                            {{state.Name}}
+                                        </mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <mat-form-field class="example-full-width">
+                                    <input matInput type="text" class="form-control" placeholder="City" id="city" name="city" [(ngModel)]="bookingModelObj.Quotation.Customer.City"
+                                        required minlength="10" maxlength="10" #city="ngModel">
+                                </mat-form-field>
+                            </td>
+                            <td class="paddingLeftOneHalf"></td>
+                            <td>
+                                <mat-form-field class="example-full-width">
+                                    <input matInput type="text" class="form-control" placeholder="Postal Code" id="PostalCode" name="PostalCode" [(ngModel)]="bookingModelObj.Quotation.Customer.PostalCode"
+                                        required minlength="6" maxlength="6" #PostalCode="ngModel">
+                                </mat-form-field>
+                            </td>
+                        </tr>
+                    </table>
+                    <div>
+                        <button mat-button matStepperPrevious>Back</button>
+                        <button mat-button matStepperNext>Next</button>
+                    </div>
+                </form>
+            </mat-step>
+            <mat-step [stepControl]="tourDetails">
+                <form #tourDetails="ngForm">
+                    <ng-template matStepLabel>Tour Info</ng-template>
+                    <table class="example-full-width">
+                        <tr>
+                            <td class="halfWidth">
+                                <mat-form-field class="example-full-width">
+                                    <input matInput [matDatepicker]="startTour" name="startTour" [(ngModel)]="bookingModelObj.Quotation.TourStartDate" placeholder="Tour Start Date">
+                                    <mat-datepicker-toggle matSuffix [for]="startTour"></mat-datepicker-toggle>
+                                    <mat-datepicker touchUi="true" #startTour></mat-datepicker>
+                                </mat-form-field>
+                            </td>
+                            <td class="paddingLeftOneHalf"></td>
+                            <td class="halfWidth">
+                                <table>
+                                    <tr>
+                                        <td class="example-full-width">
+                                            <mat-form-field class="example-full-width">
+                                                <input matInput [matDatepicker]="endTour" name="endTour" [(ngModel)]="bookingModelObj.Quotation.TourEndDate" placeholder="Tour End Date">
+                                                <mat-datepicker-toggle matSuffix [for]="endTour"></mat-datepicker-toggle>
+                                                <mat-datepicker touchUi="true" #endTour></mat-datepicker>
+                                            </mat-form-field>
+                                        </td>
+                                        <td>
+                                            <mat-form-field>
+                                                <input matInput type="text" class="form-control" placeholder="No.of Days" id="noOfDays" name="noOfDays" [(ngModel)]="bookingModelObj.Quotation.NoOfDays"
+                                                    required #noOfDays="ngModel">
+                                            </mat-form-field>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="vertical-align-bottom">
+                                <table class="example-full-width boder-spacing-zero">
+                                    <tr>
+                                        <td>
+                                            <section class="example-section">
+                                                <mat-checkbox class="example-margin" (change)="placePackageChanged(placePackageChange.checked)" name="placePackageChange"
+                                                    id="placePackageChange" #placePackageChange>Package</mat-checkbox>
+                                            </section>
+                                        </td>
+                                        <td *ngIf="!placePackageChange.checked">
+                                            <mat-form-field class="example-full-width">
+                                                <input matInput placeholder="Places" aria-label="Places" id="placeTxt" #placeTxt name="placeTxt" [matAutocomplete]="placesAutoLst"
+                                                    (keyup)="filterPlacePackage(placeTxt.value)">
+                                                <mat-autocomplete #placesAutoLst="matAutocomplete">
+                                                    <mat-option disabled class="blackColor" *ngFor="let filteredResource of filteredResources | async;let i=index" [value]="filteredResource.name">
+                                                        <section class="example-section">
+                                                            <mat-checkbox class="example-margin" [(ngModel)]="filteredResource.CheckStatus" (change)="placeSelectionChanged($event.checked,filteredResource)"
+                                                                name="checkbox{{i}}">
+                                                                <!-- <img style="vertical-align:middle;" aria-hidden src="{{state.flag}}" height="25" /> -->
+                                                                <span>{{ filteredResource.Name }}</span>
+                                                                <!-- <small>Population: {{state.population}}</small> -->
+                                                            </mat-checkbox>
+                                                        </section>
+                                                    </mat-option>
+                                                </mat-autocomplete>
+                                            </mat-form-field>
+                                        </td>
+                                        <td *ngIf="placePackageChange.checked">
+                                            <mat-form-field class="example-full-width">
+                                                <input matInput placeholder="Packages" id="filterResourceTxt" #packageTxt name="filterResourceTxt" [matAutocomplete]="packageAutoLst"
+                                                    (keyup)="filterPlacePackage(packageTxt.value)">
+                                                <mat-autocomplete #packageAutoLst="matAutocomplete">
+                                                    <mat-optgroup *ngFor="let filteredResourceGroup of filteredResources | async" [label]="filteredResourceGroup[0].PackageSubCategoryName">
+                                                        <mat-option class="blackColor" *ngFor="let filteredResource of filteredResourceGroup" [value]="filteredResource.code" (click)="movePlacesToPlacesPanel(filteredResource)">
+                                                            <section class="example-section">
+                                                                <span>{{ filteredResource.code}}</span>
+                                                            </section>
+                                                        </mat-option>
+                                                    </mat-optgroup>
+                                                </mat-autocomplete>
+                                            </mat-form-field>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                            <td class="paddingLeftOneHalf"></td>
+                            <td class="vertical-align-bottom">
+                                <mat-form-field class="demo-chip-list example-full-width">
+                                    <mat-chip-list #packagePlaces>
+                                        <mat-chip class="chip-margin-top" *ngFor="let packageSpecificPlace of packageSpecificPlaces" [removable]="true" (remove)="removePlace(packageSpecificPlace)">
+                                            {{packageSpecificPlace.Name}}
+                                            <mat-icon matChipRemove>cancel</mat-icon>
+                                        </mat-chip>
+                                        <input placeholder="Tour Places" [matChipInputFor]="packagePlaces" (keypress)="keyPressNotAllowed($event)" [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                                            [matChipInputAddOnBlur]="addOnBlur" (matChipInputTokenEnd)="add($event)" />
+                                    </mat-chip-list>
+                                </mat-form-field>
+                            </td>
+                        </tr>
+                    </table>
+                    <div>
+                        <button mat-button matStepperPrevious>Back</button>
+                        <button mat-button matStepperNext>Next</button>
+                    </div>
+                </form>
+            </mat-step>
+
+            <mat-step [stepControl]="VehicleDetails">
+                <form #VehicleDetails="ngForm">
+                    <ng-template matStepLabel>Vehicle/Arrangements</ng-template>
+                    <h3 mat-subheader>
+                        <span style="cursor:pointer" mat-icon-button [matMenuTriggerFor]="menu2">
+                            <mat-icon  class="verticleAlignSub">more_vert</mat-icon>
+                        </span>
+                        <mat-menu #menu2="matMenu">
+                            <button mat-menu-item (click)="addNewVehicle()">
+                                <mat-icon>add</mat-icon>
+                                <span> Add </span>
+                            </button>
+                            <button mat-menu-item [disabled]="disableVechileBtn" (click)="removeSelectedVehicle()">
+                                <mat-icon>remove</mat-icon>
+                                <span> Remove </span>
+                            </button>
+                        </mat-menu>
+                        Vehicle Information</h3>
+                    <mat-divider style="position:unset"></mat-divider>
+
+                    <table class="example-full-width">
+                        <tr *ngFor="let vechilceObj of vechilcesObj;let i=index">
+                            <td class="vertical-align-bottom halfWidth">
+                                <table class="example-full-width boder-spacing-zero">
+                                    <tr>
+                                        <td>
+                                            <section class="example-section">
+                                                <mat-checkbox class="example-margin" (change)="changeVehicleObjs()" [(ngModel)]="vechilceObj.IsChecked" name="vehicleHire{{i}}">
+
+                                                </mat-checkbox>
+                                            </section>
+                                        </td>
+                                        <td>
+                                            {{i+1}})
+                                        </td>
+                                        <td>
+                                            <mat-form-field class="example-full-width">
+                                                <mat-select placeholder="Vehicles" name="vechileType{{i}}" [(ngModel)]="vechilceObj.VehicleID">
+                                                    <mat-option>Select Vehicle</mat-option>
+                                                    <mat-option *ngFor="let vehiclesListItem of vehiclesList" [value]="vehiclesListItem.Name">{{vehiclesListItem.Name}}</mat-option>
+                                                </mat-select>
+                                            </mat-form-field>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                            <td class="paddingLeftOneHalf"></td>
+                            <td class="vertical-align-bottom halfWidth">
+                                <table class="example-full-width boder-spacing-zero">
+                                    <tr>
+                                        <td class="vertical-align-bottom">
+                                            <mat-form-field class="example-full-width">
+                                                <input matInput type="number" class="form-control" placeholder="Seating Capacity" id="seatingCapacity{{i}}" name="seatingCapacity{{i}}"
+                                                    [(ngModel)]="vechilceObj.SeatingCapacity">
+                                            </mat-form-field>
+                                        </td>
+                                        <td>
+                                            <mat-form-field class="example-full-width">
+                                                <textarea matInput [(ngModel)]="vechilceObj.HiringCondition" name="hiringCondition{{i}}" placeholder="Hiring Condition"></textarea>
+                                            </mat-form-field>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+
+
+                        <tr>
+                            <td>
+                                <mat-form-field class="example-full-width">
+                                    <input matInput type="number" class="form-control" placeholder="Total No.of Seats" id="noSeats" name="noSeats" [(ngModel)]="bookingModelObj.Quotation.NoOfSeats"
+                                        required #noSeats="ngModel">
+                                </mat-form-field>
+                            </td>
+                            <td class="paddingLeftOneHalf"></td>
+                            <td style="width:50%">
+                                <table class="example-full-width">
+                                    <tr>
+                                        <td>
+                                            <mat-form-field class="example-full-width">
+                                                <input matInput type="number" class="form-control" placeholder="Adults" id="totalAdult" name="totalAdult" [(ngModel)]="bookingModelObj.Quotation.Adults"
+                                                    required #totalAdult="ngModel">
+                                            </mat-form-field>
+                                        </td>
+                                        <td>
+                                            <mat-form-field class="example-full-width">
+                                                <input matInput type="number" class="form-control" placeholder="Children" id="totalChild" name="totalChild" [(ngModel)]="bookingModelObj.Quotation.Children"
+                                                    required #totalChild="ngModel">
+                                            </mat-form-field>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="5">
+                                <mat-form-field class="example-full-width">
+                                    <textarea matInput name="Transporation" [(ngModel)]="bookingModelObj.Quotation.Transporation" placeholder="Transporation"></textarea>
+                                </mat-form-field>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="5">
+                                <mat-form-field class="example-full-width">
+                                    <textarea matInput name="Food" [(ngModel)]="bookingModelObj.Quotation.Food" placeholder="Food"></textarea>
+                                </mat-form-field>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="5">
+                                <mat-form-field class="example-full-width">
+                                    <textarea matInput name="Accomodation" [(ngModel)]="bookingModelObj.Quotation.Accomodation" placeholder="Accomodation"></textarea>
+                                </mat-form-field>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="5">
+                                <mat-form-field class="example-full-width">
+                                    <textarea matInput name="SpecialConditions" [(ngModel)]="bookingModelObj.Quotation.SpecialConditions" placeholder="Special Conditions"></textarea>
+                                </mat-form-field>
+                            </td>
+                        </tr>
+                    </table>
+                </form>
+                <div>
+                    <button mat-button matStepperPrevious>Back</button>
+                    <button mat-button matStepperNext>Next</button>
+                </div>
+            </mat-step>
+            <mat-step [stepControl]="ParticipantDetails">
+                <form #ParticipantDetails="ngForm">
+                    <ng-template matStepLabel>Participant(s) Info</ng-template>
+                    <h3 mat-subheader>
+                        <span style="cursor:pointer" mat-icon-button [matMenuTriggerFor]="menu">
+                            <mat-icon class="verticleAlignSub">more_vert</mat-icon>
+                        </span>
+                        <mat-menu #menu="matMenu">
+                            <button mat-menu-item (click)="addNewParticipant()">
+                                <mat-icon>add</mat-icon>
+                                <span> Add </span>
+                            </button>
+                            <button mat-menu-item [disabled]="disableParticipantBtn" (click)="removeParticipant()">
+                                <mat-icon>remove</mat-icon>
+                                <span> Remove </span>
+                            </button>
+                        </mat-menu>
+                        Participents</h3>
+                    <mat-divider style="position:unset"></mat-divider>
+                    <table class="example-full-width" *ngFor="let participantsListItem of participantsList;let i=index">
+                        <tr>
+                            <td>
+                                <section class="example-section paddingLeftHalf">
+                                    <mat-checkbox class="example-margin" (change)="checkboxChanged()" name="participantChkbox{{i}}" [(ngModel)]="participantsListItem.ChkChecked"></mat-checkbox>
+                                </section>
+                            </td>
+                            <td>
+                                {{i+1}})
+                            </td>
+                            <td>
+                                <mat-form-field class="example-full-width">
+                                    <input matInput type="text" class="form-control" placeholder="First Name" name="fname{{i}}" [(ngModel)]="participantsListItem.FirstName"
+                                        required minlength="3">
+                                </mat-form-field>
+                            </td>
+                            <td>
+                                <mat-form-field class="example-full-width">
+                                    <input matInput type="text" class="form-control" placeholder="Last Name" id="lname" name="lname{{i}}" [(ngModel)]="participantsListItem.LastName"
+                                        required minlength="3">
+                                </mat-form-field>
+                            </td>
+                            <td>
+                                <mat-form-field class="example-full-width">
+                                    <input matInput type="number" class="form-control" placeholder="Age" id="age" name="age{{i}}" [(ngModel)]="participantsListItem.Age"
+                                        required minlength="0" maxlength="3">
+                                </mat-form-field>
+                            </td>
+                            <td>
+                                <mat-form-field class="example-full-width selectElementPadding">
+                                    <mat-select name="Gender" [(ngModel)]="participantsListItem.Gender" placeholder="Gender">
+                                        <mat-option value="Male">Male</mat-option>
+                                        <mat-option value="FeMale">FeMale</mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </td>
+                            <td>
+                                <mat-form-field class="example-full-width">
+                                    <input matInput type="text" class="form-control" placeholder="Contact Number" name="ContactNo{{i}}" [(ngModel)]="participantsListItem.ContactNo1"
+                                        required minlength="0" maxlength="3">
+                                </mat-form-field>
+                            </td>
+                            <td>
+                                <mat-form-field class="example-full-width">
+                                    <input matInput type="text" class="form-control" placeholder="Alternate Contact Number" name="ContactNo2{{i}}" [(ngModel)]="participantsListItem.ContactNo2"
+                                        required minlength="0" maxlength="3">
+                                </mat-form-field>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                            </td>
+                            <td>
+                            </td>
+                            <td>
+                                <mat-form-field class="example-full-width">
+                                    <input matInput type="text" class="form-control" placeholder="Address" name="Address{{i}}" [(ngModel)]="participantsListItem.Address"
+                                        required minlength="3">
+                                </mat-form-field>
+                            </td>
+                            <td>
+                                <mat-form-field class="example-full-width">
+                                    <input matInput type="text" class="form-control" placeholder="Address Line 2" id="Address" name="Address2{{i}}" [(ngModel)]="participantsListItem.AddressLine2"
+                                        required minlength="3">
+                                </mat-form-field>
+                            </td>
+                            <td>
+                                <mat-form-field class="example-full-width">
+                                    <mat-select name="country{{i}}" [(ngModel)]="participantsListItem.Country" placeholder="Country">
+                                        <mat-option>Select Country</mat-option>
+                                        <mat-option [value]="country.ID" *ngFor="let country of countriesList">
+                                            {{country.Name}}</mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </td>
+                            <td>
+                                <mat-form-field class="example-full-width">
+                                    <mat-select name="state{{i}}" [(ngModel)]="participantsListItem.State" placeholder="State">
+                                        <mat-option>Select State</mat-option>
+                                        <mat-option [value]="statesListItem.ID" *ngFor="let statesListItem of statesList">statesListItem.Name</mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </td>
+                            <td>
+                                <mat-form-field class="example-full-width">
+                                    <input matInput type="text" class="form-control" placeholder="City" id="lname" name="city{{i}}" [(ngModel)]="participantsListItem.City"
+                                        required minlength="0" maxlength="3">
+                                </mat-form-field>
+                            </td>
+                            <td>
+                                <mat-form-field class="example-full-width">
+                                    <input matInput type="text" class="form-control" placeholder="Postal Code" id="lname" name="postalCode{{i}}" [(ngModel)]="participantsListItem.PostalCode"
+                                        required minlength="0" maxlength="3">
+                                </mat-form-field>
+                            </td>
+                        </tr>
+                    </table>
+                    <div>
+                        <button mat-button matStepperPrevious>Back</button>
+                        <button mat-button matStepperNext>Next</button>
+                    </div>
+                </form>
+            </mat-step>
+            <mat-step [stepControl]="PaymentDetails" *ngIf="!IsQuotation">
+                <form #PaymentDetails="ngForm">
+                    <ng-template matStepLabel>Payment</ng-template>
+                    <table class="example-full-width">
+                        <tr>
+                            <td class="vertical-align-bottom halfWidth">
+                                <mat-form-field class="example-full-width">
+                                    <input matInput type="number" class="form-control" placeholder="Total Agreed Amount" id="totalAgreedAmount" name="totalAgreedAmount"
+                                        [(ngModel)]="paymentObj.AgreedAmount" required>
+                                </mat-form-field>
+                            </td>
+                            <td class="paddingLeftOneHalf"></td>
+                            <td class="vertical-align-bottom halfWidth">
+                                <table>
+                                    <tr>
+                                        <td>
+                                            <section class="example-section">
+                                                <mat-checkbox class="example-margin" [(ngModel)]="paymentObj.IsPerSeat" name="perseatChk" #perseatChk>Per Seat</mat-checkbox>
+                                            </section>
+                                        </td>
+                                        <td>
+                                            <mat-form-field class="example-full-width">
+                                                <input matInput type="number" [disabled]="!perseatChk.checked" class="form-control" placeholder="Per Seat Amount" id="perseatAmount"
+                                                    name="perseatAmount" [(ngModel)]="paymentObj.PerSeat" required>
+                                            </mat-form-field>
+                                        </td>
+                                        <td>
+                                            <section class="example-section">
+                                                <mat-checkbox class="example-margin" [(ngModel)]="paymentObj.IsLumpsum" name="lumpsumChk" #lumpsumChk>Lumpsum</mat-checkbox>
+                                            </section>
+                                        </td>
+                                        <td>
+                                            <mat-form-field class="example-full-width">
+                                                <input matInput type="number" class="form-control" [disabled]="!lumpsumChk.checked" placeholder="Agreed Lumpsum Amount" id="totalAgreedLumpsum"
+                                                    name="totalAgreedLumpsum" [(ngModel)]="paymentObj.Lumpsum" required>
+                                            </mat-form-field>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <mat-form-field class="example-full-width">
+                                    <input matInput type="number" class="form-control" placeholder="Service Tax In %" id="totalAgreedAmount" name="totalAgreedAmount"
+                                        [(ngModel)]="paymentObj.ServiceTaxPer" required>
+                                </mat-form-field>
+                            </td>
+                            <td class="paddingLeftOneHalf"></td>
+                            <td>
+                                <mat-form-field class="example-full-width">
+                                    <input matInput type="number" class="form-control" placeholder="Total Amount Incl. of Service Tax" id="totalAmountService"
+                                        name="totalAmountService" [(ngModel)]="paymentObj.TotalAmount" required>
+                                </mat-form-field>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <mat-form-field class="example-full-width">
+                                    <textarea matInput placeholder="Amount In Words"></textarea>
+                                </mat-form-field>
+                            </td>
+                            <td class="paddingLeftOneHalf"></td>
+                            <td class="vertical-align-bottom">
+                                <mat-form-field class="example-full-width">
+                                    <input matInput type="number" class="form-control" placeholder="Advance Paid" id="totalAdvanceAmount" name="totalAdvanceAmount"
+                                        [(ngModel)]="paymentObj.AdvanceAmount" required>
+                                </mat-form-field>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <mat-form-field class="example-full-width">
+                                    <input matInput type="number" class="form-control" placeholder="Balance Rs. " id="totalBalanceAmount" name="totalBalanceAmount"
+                                        [(ngModel)]="paymentObj.BalanceAmount" required>
+                                </mat-form-field>
+                            </td>
+                            <td class="paddingLeftOneHalf"></td>
+                            <td>
+                                <mat-form-field class="example-full-width">
+                                    <input matInput [matDatepicker]="onBeforePay" name="onBeforePay" [(ngModel)]="paymentObj.PayableOnBefore" placeholder="On Before Pay">
+                                    <mat-datepicker-toggle matSuffix [for]="onBeforePay"></mat-datepicker-toggle>
+                                    <mat-datepicker touchUi="true" #onBeforePay></mat-datepicker>
+                                </mat-form-field>
+                            </td>
+                        </tr>
+                    </table>
+                    <div>
+                        <button mat-button matStepperPrevious>Back</button>
+                        <button mat-button matStepperNext>Next</button>
+                    </div>
+                </form>
+            </mat-step>
+            <mat-step>
+                <ng-template matStepLabel>Done</ng-template>
+                You are now done.
+                <div>
+                    <button mat-button matStepperPrevious>Back</button>
+                    <button mat-button (click)="stepper.reset()">Reset</button>
+                </div>
+            </mat-step>
+        </mat-horizontal-stepper>
+    </mat-card-content>
+</mat-card>

@@ -1,0 +1,75 @@
+<mat-card  class="example-card">    
+        <mat-card-header>
+            <mat-card-subtitle>
+                    <button mat-icon-button [matMenuTriggerFor]="menu">
+                        <mat-icon>menu</mat-icon>
+                          </button>
+                          <mat-menu #menu="matMenu">
+                            <button mat-menu-item (click)="addNewPackage()">
+                              <mat-icon>add</mat-icon>
+                              <span>  Add  </span>
+                            </button>
+                            <button mat-menu-item [disabled]="disableRemoverBtn" (click)="removePackage()">
+                              <mat-icon>remove</mat-icon>
+                              <span>  Remove  </span>
+                            </button>
+                          </mat-menu>
+                    <mat-icon mat-list-icon class="verticalAlignCustom">location_city</mat-icon>
+                    <b style="font-size:1.3em">Add New Package</b>
+            </mat-card-subtitle>       
+          </mat-card-header>
+          <mat-card-content>
+              <form #packageForm="ngForm">
+              <table>
+                  <tr *ngFor="let newPackage of newPackagesList;let i=index">
+                      <td>                                      
+                        <section class="example-section paddingLeftHalf">
+                           <mat-checkbox class="example-margin" (change)="checkboxChanged()" name="checkbox" [(ngModel)]="newPackage.isChecked"></mat-checkbox>                            
+                        </section>
+                      </td>
+                      <td>
+                        <mat-form-field>
+                          <input matInput type="text" class="form-control" placeholder="Package Code"
+                                id="code" name="code{{i}}" [(ngModel)]="newPackage.Code" required  minlength="3"
+                                   #code="ngModel">                 
+                          </mat-form-field>
+                      </td>
+                      <td class="paddingLeftOneHalf">
+                            <mat-form-field style="width:14em">
+                                    <mat-select placeholder="Select Package Category"  id="pkCategory"
+                                     name="pkCategory{{i}}" 
+                                     [(ngModel)]="newPackage.SubCatID" #pkCategory="ngModel" required>
+                                      <mat-option>Package Category</mat-option>
+                                      <mat-option *ngFor="let pkSubCat of packageSubCategories" [value]="pkSubCat.Id">
+                                        {{pkSubCat.Name}}
+                                      </mat-option>
+                                    </mat-select>
+                            </mat-form-field>
+                      </td>
+                      <td class="paddingLeftOneHalf"> 
+                            <mat-form-field>
+                              <input matInput type="number" class="form-control" placeholder="Package Fair"
+                                    id="fair" name="fair{{i}}" [(ngModel)]="newPackage.Fair"
+                                       #fair="ngModel">                 
+                            </mat-form-field>
+                    </td>
+                      <td  class="paddingLeftOneHalf"></td>
+                      <td>
+                         <section class="example-section">
+                          <label class="example-margin">IsActive : </label>
+                          <mat-radio-group  name="isActive{{i}}" [(ngModel)]="newPackage.IsActive">
+                            <mat-radio-button class="example-margin"  value="1">Active</mat-radio-button>
+                            <mat-radio-button class="example-margin" value="0">InActive</mat-radio-button>
+                          </mat-radio-group>
+                         </section>
+                      </td>
+                  </tr>
+                  <tr>
+                    <td colspan="5" class="paddingLeftOneHalf">
+                        <button mat-raised-button color="primary" [disabled]="btnDisable" (click)="submitPackages(packageForm.form.valid)">Submit</button>
+                    </td>
+                  </tr>
+              </table>
+              </form>
+          </mat-card-content>
+    </mat-card>
